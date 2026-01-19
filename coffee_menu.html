@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html lang="ja">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>コーヒーメニュー</title>
+    <style>
+        @page {
+            margin: 15mm;
+        }
+
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Noto+Serif+JP:wght@400;700&display=swap');
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Noto Serif JP', serif;
+            width: 210mm;
+            min-height: 297mm;
+            margin: 0 auto;
+            padding: 10mm 15mm;
+            background: #fff;
+            color: #2d241a;
+            line-height: 1.5;
+            -webkit-print-color-adjust: exact;
+        }
+
+        h1 {
+            font-size: 32px;
+            font-weight: 700;
+            margin-bottom: 15px;
+            letter-spacing: 0.2em;
+            display: block;
+            text-align: center;
+            position: relative;
+        }
+
+        h1::after {
+            content: '';
+            display: block;
+            width: 40px;
+            height: 2px;
+            background: #2d241a;
+            margin: 12px auto 0;
+        }
+
+        .menu-container {
+            position: relative;
+            padding-left: 24px;
+        }
+
+        /* 焙煎度バー */
+        .roast-indicator-track {
+            position: absolute;
+            left: 0;
+            top: 45px;
+            /* headerの下から開始 */
+            bottom: 30px;
+            width: 4px;
+            background: linear-gradient(to bottom,
+                    #e8d5c4 0%,
+                    /* フルーティ（浅煎り） */
+                    #a68b75 50%,
+                    /* マイルド（中煎り） */
+                    #3d2b1f 100%
+                    /* 苦め（深煎り） */
+                );
+            border-radius: 2px;
+        }
+
+        .menu-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .menu-header {
+            text-align: right;
+            border-bottom: 1px solid #e0ddd8;
+        }
+
+        .menu-header th {
+            font-weight: 700;
+            font-size: 14px;
+            padding: 8px 10px;
+            color: #8c8479;
+            letter-spacing: 0.1em;
+            text-transform: uppercase;
+        }
+
+        .menu-header .icon {
+            display: block;
+            margin-bottom: 4px;
+            font-size: 14px;
+            filter: grayscale(1);
+            opacity: 0.6;
+        }
+
+        .category-separator {
+            height: 20px;
+        }
+
+        .category-name {
+            font-size: 14px;
+            font-weight: 700;
+            color: #8c8479;
+            letter-spacing: 0.2em;
+            padding: 15px 0 5px 8px;
+            text-transform: uppercase;
+        }
+
+        .menu-row {
+            transition: background-color 0.2s;
+        }
+
+        .menu-row td {
+            padding: 8px 8px;
+            border-bottom: 0.5px solid #f2f0ed;
+            vertical-align: middle;
+        }
+
+        .coffee-info {
+            display: flex;
+            flex-direction: column;
+            gap: 2px;
+        }
+
+        .coffee-name {
+            font-size: 20px;
+            font-weight: 700;
+            color: #2d241a;
+        }
+
+        .coffee-detail {
+            font-size: 13px;
+            color: #8c8479;
+            font-family: "Inter", sans-serif;
+        }
+
+        .price-cell {
+            text-align: right;
+            font-family: 'Inter', sans-serif;
+            font-size: 18px;
+            font-weight: 700;
+            white-space: nowrap;
+            min-width: 80px;
+            color: #4a3f35;
+        }
+
+        .price-currency {
+            font-size: 12px;
+            margin-left: 4px;
+            color: #a68b75;
+        }
+
+        .notes {
+            margin-top: 20px;
+            padding: 15px;
+            background: #fcfbf9;
+            border-radius: 8px;
+            font-size: 15px;
+            color: #5d544b;
+            line-height: 1.8;
+            border: 1px solid #f2f0ed;
+        }
+
+        .notes p {
+            position: relative;
+            padding-left: 15px;
+        }
+
+        .notes p::before {
+            content: '•';
+            position: absolute;
+            left: 0;
+            color: #a68b75;
+        }
+
+        @media print {
+            body {
+                width: 210mm;
+                height: auto;
+                margin: 0 auto;
+                padding: 20mm 15mm;
+            }
+
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        /* 画面表示用のボタン管理 */
+        .print-button-container {
+            display: flex;
+            justify-content: flex-end;
+            margin-bottom: 20px;
+            padding: 0 15px;
+            width: 210mm;
+            margin-left: auto;
+            margin-right: auto;
+        }
+
+        .btn-print {
+            background-color: #2d241a;
+            color: #fff;
+            border: none;
+            padding: 10px 20px;
+            border-radius: 4px;
+            cursor: pointer;
+            font-family: 'Inter', sans-serif;
+            font-size: 14px;
+            font-weight: 700;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            transition: opacity 0.2s;
+        }
+
+        .btn-print:hover {
+            opacity: 0.8;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="print-button-container no-print">
+        <button class="btn-print" onclick="window.print()">
+            <span>📄</span> PDFとして保存 / 印刷
+        </button>
+    </div>
+    <h1>コーヒーメニュー</h1>
+
+    <div class="menu-container">
+        <div class="roast-indicator-track"></div>
+
+        <table class="menu-table">
+            <thead>
+                <tr class="menu-header">
+                    <th style="text-align: left; padding-left: 8px;">種類</th>
+                    <th>
+                        <span class="icon">☕</span>
+                        カップ
+                    </th>
+                    <th>
+                        <span class="icon">🫘</span>
+                        100g
+                    </th>
+                    <th>
+                        <span class="icon">🫘</span>
+                        200g
+                    </th>
+                </tr>
+            </thead>
+            <tbody>
+                <!-- ブレンド -->
+                <tr>
+                    <td colspan="4" class="category-name">ハウスブレンド</td>
+                </tr>
+                <tr class="menu-row">
+                    <td>
+                        <div class="coffee-info">
+                            <span class="coffee-name">つばめ通りブレンド</span>
+                        </div>
+                    </td>
+                    <td class="price-cell">500<span class="price-currency">円</span></td>
+                    <td class="price-cell">720<span class="price-currency">円</span></td>
+                    <td class="price-cell">1,330<span class="price-currency">円</span></td>
+                </tr>
+                <tr class="menu-row">
+                    <td>
+                        <div class="coffee-info">
+                            <span class="coffee-name">下町ビターブレンド</span>
+                        </div>
+                    </td>
+                    <td class="price-cell">500<span class="price-currency">円</span></td>
+                    <td class="price-cell">850<span class="price-currency">円</span></td>
+                    <td class="price-cell">1,600<span class="price-currency">円</span></td>
+                </tr>
+
+                <tr class="category-separator"></tr>
+
+                <!-- フルーティー -->
+                <tr>
+                    <td colspan="4" class="category-name">浅煎り・フルーティー</td>
+                </tr>
+                <tr class="menu-row">
+                    <td>
+                        <div class="coffee-info">
+                            <span class="coffee-name">インド</span>
+                            <span class="coffee-detail">バルマアディ バイオダイナミック ナチュラル</span>
+                        </div>
+                    </td>
+                    <td class="price-cell">600<span class="price-currency">円</span></td>
+                    <td class="price-cell">1,080<span class="price-currency">円</span></td>
+                    <td class="price-cell">2,060<span class="price-currency">円</span></td>
+                </tr>
+                <tr class="menu-row">
+                    <td>
+                        <div class="coffee-info">
+                            <span class="coffee-name">エチオピア</span>
+                            <span class="coffee-detail">ネケムテG1-AMGナチュラル ケレムウォレガ</span>
+                        </div>
+                    </td>
+                    <td class="price-cell">500<span class="price-currency">円</span></td>
+                    <td class="price-cell">970<span class="price-currency">円</span></td>
+                    <td class="price-cell">1,840<span class="price-currency">円</span></td>
+                </tr>
+
+                <tr class="category-separator"></tr>
+
+                <!-- マイルド -->
+                <tr>
+                    <td colspan="4" class="category-name">中煎り・まろやか</td>
+                </tr>
+                <tr class="menu-row">
+                    <td>
+                        <div class="coffee-info">
+                            <span class="coffee-name">コロンビア</span>
+                            <span class="coffee-detail">KUMA ティピカ</span>
+                        </div>
+                    </td>
+                    <td class="price-cell">500<span class="price-currency">円</span></td>
+                    <td class="price-cell">970<span class="price-currency">円</span></td>
+                    <td class="price-cell">1,840<span class="price-currency">円</span></td>
+                </tr>
+                <tr class="menu-row">
+                    <td>
+                        <div class="coffee-info">
+                            <span class="coffee-name">東ティモール</span>
+                            <span class="coffee-detail">レテフォホ 松中くん ～ゴウララ集落より愛をこめて～</span>
+                        </div>
+                    </td>
+                    <td class="price-cell">500<span class="price-currency">円</span></td>
+                    <td class="price-cell">760<span class="price-currency">円</span></td>
+                    <td class="price-cell">1,420<span class="price-currency">円</span></td>
+                </tr>
+                <tr class="menu-row">
+                    <td>
+                        <div class="coffee-info">
+                            <span class="coffee-name">グアテマラ</span>
+                            <span class="coffee-detail">ラ・クプラ農園ウォッシュド</span>
+                        </div>
+                    </td>
+                    <td class="price-cell">500<span class="price-currency">円</span></td>
+                    <td class="price-cell">890<span class="price-currency">円</span></td>
+                    <td class="price-cell">1,680<span class="price-currency">円</span></td>
+                </tr>
+                <tr class="menu-row">
+                    <td>
+                        <div class="coffee-info">
+                            <span class="coffee-name">ブラジル</span>
+                            <span class="coffee-detail">バージングランデ農園 樹上完熟スーパーボイア 2024</span>
+                        </div>
+                    </td>
+                    <td class="price-cell">500<span class="price-currency">円</span></td>
+                    <td class="price-cell">830<span class="price-currency">円</span></td>
+                    <td class="price-cell">1,560<span class="price-currency">円</span></td>
+                </tr>
+                <tr class="menu-row">
+                    <td>
+                        <div class="coffee-info">
+                            <span class="coffee-name">ブルーマウンテン</span>
+                            <span class="coffee-detail">クライスデールロット192</span>
+                        </div>
+                    </td>
+                    <td class="price-cell">800<span class="price-currency">円</span></td>
+                    <td class="price-cell">2,000<span class="price-currency">円</span></td>
+                    <td class="price-cell">3,900<span class="price-currency">円</span></td>
+                </tr>
+
+                <tr class="category-separator"></tr>
+
+                <!-- 苦め -->
+                <tr>
+                    <td colspan="4" class="category-name">深煎り・コクと苦味</td>
+                </tr>
+                <tr class="menu-row">
+                    <td>
+                        <div class="coffee-info">
+                            <span class="coffee-name">ウガンダ</span>
+                            <span class="coffee-detail">ロブスタ</span>
+                        </div>
+                    </td>
+                    <td class="price-cell">500<span class="price-currency">円</span></td>
+                    <td class="price-cell">700<span class="price-currency">円</span></td>
+                    <td class="price-cell">1,300<span class="price-currency">円</span></td>
+                </tr>
+                <tr class="menu-row">
+                    <td>
+                        <div class="coffee-info">
+                            <span class="coffee-name">エチオピア</span>
+                            <span class="coffee-detail">ネケムテG1-AMGナチュラル ケレムウォレガ</span>
+                        </div>
+                    </td>
+                    <td class="price-cell">500<span class="price-currency">円</span></td>
+                    <td class="price-cell">970<span class="price-currency">円</span></td>
+                    <td class="price-cell">1,840<span class="price-currency">円</span></td>
+                </tr>
+                <tr class="menu-row">
+                    <td>
+                        <div class="coffee-info">
+                            <span class="coffee-name">イエメン</span>
+                            <span class="coffee-detail">ホワイトキャメル ＜モカマタリ＞ アルハムダニ ♯783</span>
+                        </div>
+                    </td>
+                    <td class="price-cell">600<span class="price-currency">円</span></td>
+                    <td class="price-cell">1,200<span class="price-currency">円</span></td>
+                    <td class="price-cell">2,300<span class="price-currency">円</span></td>
+                </tr>
+            </tbody>
+        </table>
+
+        <div class="notes">
+            <p>アイスコーヒー・カフェオレは ＋100円 です。</p>
+            <p>コーヒーのおかわり（2杯目以降）100円引き。</p>
+            <p>珈琲豆挽き売りできます。卸売もあります。お気軽にご相談ください。</p>
+        </div>
+    </div>
+</body>
+
+</html>
