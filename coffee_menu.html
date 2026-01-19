@@ -4,7 +4,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>コーヒーメニュー</title>
+    <title>珈琲</title>
     <style>
         @page {
             margin: 15mm;
@@ -23,30 +23,25 @@
             width: 210mm;
             min-height: 297mm;
             margin: 0 auto;
-            padding: 10mm 15mm;
+            padding-top: 15mm;
+            padding-left: 15mm;
+            padding-right: 15mm;
+            padding-bottom: 10mm;
             background: #fff;
             color: #2d241a;
             line-height: 1.5;
             -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
 
         h1 {
-            font-size: 32px;
+            font-size: 36px;
             font-weight: 700;
-            margin-bottom: 15px;
-            letter-spacing: 0.2em;
+            margin: 0 0 50px 0;
+            letter-spacing: 0.35em;
             display: block;
             text-align: center;
-            position: relative;
-        }
-
-        h1::after {
-            content: '';
-            display: block;
-            width: 40px;
-            height: 2px;
-            background: #2d241a;
-            margin: 12px auto 0;
+            color: #2d241a;
         }
 
         .menu-container {
@@ -80,14 +75,14 @@
 
         .menu-header {
             text-align: right;
-            border-bottom: 1px solid #e0ddd8;
+            border-bottom: 2px solid #d4d0c8;
         }
 
         .menu-header th {
             font-weight: 700;
             font-size: 14px;
             padding: 8px 10px;
-            color: #8c8479;
+            color: #5d544b;
             letter-spacing: 0.1em;
             text-transform: uppercase;
         }
@@ -96,21 +91,24 @@
             display: block;
             margin-bottom: 4px;
             font-size: 14px;
-            filter: grayscale(1);
-            opacity: 0.6;
+            filter: grayscale(0.5);
+            opacity: 0.7;
         }
 
         .category-separator {
-            height: 20px;
+            height: 15px;
         }
 
         .category-name {
-            font-size: 14px;
+            font-family: 'Inter', sans-serif;
+            font-size: 11px;
             font-weight: 700;
-            color: #8c8479;
-            letter-spacing: 0.2em;
-            padding: 15px 0 5px 8px;
+            color: #8c6b52;
+            letter-spacing: 0.15em;
+            padding: 20px 0 6px 8px;
             text-transform: uppercase;
+            border-bottom: 1.5px solid #e8e5e0;
+            vertical-align: bottom;
         }
 
         .menu-row {
@@ -118,7 +116,7 @@
         }
 
         .menu-row td {
-            padding: 8px 8px;
+            padding: 6px 8px;
             border-bottom: 0.5px solid #f2f0ed;
             vertical-align: middle;
         }
@@ -126,35 +124,39 @@
         .coffee-info {
             display: flex;
             flex-direction: column;
-            gap: 2px;
+            gap: 1px;
         }
 
         .coffee-name {
-            font-size: 20px;
+            font-size: 18px;
             font-weight: 700;
             color: #2d241a;
+            display: block;
         }
 
         .coffee-detail {
-            font-size: 13px;
-            color: #8c8479;
+            font-size: 11px;
+            color: #6b6459;
             font-family: "Inter", sans-serif;
+            font-weight: 400;
         }
 
         .price-cell {
             text-align: right;
             font-family: 'Inter', sans-serif;
             font-size: 18px;
-            font-weight: 700;
+            font-weight: 500;
             white-space: nowrap;
-            min-width: 80px;
-            color: #4a3f35;
+            min-width: 70px;
+            color: #2d241a;
+            letter-spacing: -0.02em;
         }
 
         .price-currency {
-            font-size: 12px;
-            margin-left: 4px;
-            color: #a68b75;
+            font-size: 11px;
+            margin-left: 3px;
+            color: #8c6b52;
+            font-weight: 400;
         }
 
         .notes {
@@ -185,7 +187,10 @@
                 width: 210mm;
                 height: auto;
                 margin: 0 auto;
-                padding: 20mm 15mm;
+                padding-top: 20mm;
+                padding-left: 15mm;
+                padding-right: 15mm;
+                padding-bottom: 15mm;
             }
 
             .no-print {
@@ -232,7 +237,7 @@
             <span>📄</span> PDFとして保存 / 印刷
         </button>
     </div>
-    <h1>コーヒーメニュー</h1>
+    <h1>珈琲</h1>
 
     <div class="menu-container">
         <div class="roast-indicator-track"></div>
@@ -258,7 +263,7 @@
             <tbody>
                 <!-- ブレンド -->
                 <tr>
-                    <td colspan="4" class="category-name">ハウスブレンド</td>
+                    <td colspan="4" class="category-name">ブレンド</td>
                 </tr>
                 <tr class="menu-row">
                     <td>
